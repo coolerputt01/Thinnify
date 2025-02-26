@@ -3,6 +3,7 @@
     <div class="bread-crumb">
       <i class="fa-solid fa-bars-staggered"></i>
     </div>
+    <input type="text" placeholder="Search Todos" class="todo-search" />
     <div class="user-interactions">
       <i class="fa-solid fa-search"></i>
       <i class="fa-solid fa-bell"></i>
@@ -28,7 +29,17 @@ i {
   font-family: "Font Awesome 5 Free" !important;
   font-weight: 900; /* Needed for solid icons */
 }
-
+.todo-search{
+  border: none;
+  border-radius: 50px;
+  padding: 0.5em 1em;
+  background-color: #f9f9f9;
+  width: 20em;
+  height: 3em;
+}
+.todo-search:focus{
+  outline: none;
+}
 .nav-bar {
   display: flex;
   justify-content: space-between;

@@ -4,7 +4,7 @@
       <input type="checkbox" id="circularCheckbox" v-model="isChecked">
       <span class="custom-checkbox" :style="checkboxStyle"></span>
     </label>
-    <div class="todo-text">Wash the dishes.</div>
+    <div class="todo-text" :class="{ completed: isChecked }">{{ todoText }}</div>
   </div>
 </template>
 
@@ -15,6 +15,10 @@ export default {
     category: {
       type: String,
       required: true, // Must pass "work", "personal", "home", "goals", etc.
+    },
+    todoText: {
+      type: String,
+      required: true,
     },
   },
   data() {
@@ -53,7 +57,10 @@ export default {
 input[type="checkbox"] {
   display: none;
 }
-
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
 .custom-checkbox {
   display: inline-block;
   width: 24px;

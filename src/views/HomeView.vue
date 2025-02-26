@@ -19,8 +19,15 @@
     <div class="todo-app-card">
       <div class="todo-app-header">TASKS</div>
       <div class="todo-app-container">
-        <TodoCard category="productivity" />
+        <TodoCard category="productivity" todo-text="Wash the dishes." />
+        <TodoCard category="personal" todo-text="Wash the dishes." />
+        <TodoCard category="others" todo-text="Wash the dishes." />
+        <TodoCard category="home" todo-text="Wash the dishes." />
+        <TodoCard category="goals" todo-text="Wash the dishes." />
       </div>
+    </div>
+    <div class="add-todo-btn">
+      <i class="fa fa-plus"></i>
     </div>
   </section>
 </template>
@@ -52,11 +59,36 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 1.1em;
-  overflow: auto;
+  overflow-x: hidden;
+  flex-direction: column;
   width:100%;
   border-radius: 50px;
   white-space: nowrap;
   background-color: #f9f9f9;
+}
+.add-todo-btn {
+  position: fixed;
+  bottom: 2em;
+  right: 2em;
+  padding: 2em !important;
+  background-color: blue;
+  border-radius: 50%;
+  width: 3em;
+  height: 3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  -webkit-box-shadow: 5px 5px 31px 8px rgba(0, 0, 0, 0.07);
+  box-shadow: 5px 5px 31px 8px rgba(0, 0, 0, 0.07);
+}
+.add-todo-btn:hover {
+  background-color: #000;
+  cursor: pointer;
+}
+.add-todo-btn > i {
+  font-size: 2em !important;
+  font-weight: normal;
 }
 .home-view-categorized-card-container-item{
   display: flex;
