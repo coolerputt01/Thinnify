@@ -7,14 +7,32 @@
       <p class="card-task-category-value">{{ taskCategory }}</p>
     </div>
     <div class="progress-bar">
-        <div class="progress-value"></div>
+        <div class="progress-value" :style="{ backgroundColor:progressColor}"></div>
     </div>
   </div>
 </template>
 
 <script>
+import { computed } from "vue";
 export default {
   name: "CategorizedCard",
+  setup(props){
+    const progressColor = computed(() => {
+      switch(props.taskCategory.toLowerCase()) {
+        case "personal":
+          return "blue";
+        case "productivity":
+          return "green";
+        case "goals":
+          return "red";
+        case "home":
+          return "purple";
+        default:
+          return "gray"; // Default color if category is unknown
+      }
+    });
+    return { progressColor };
+  },
   props: {
     taskCategory: {
         type:String,
@@ -49,7 +67,6 @@ export default {
 .progress-value{
     width:50%;
     height: 100%;
-    background: blue;
 }
 .card-task-category-value {
     font-size: 1.5em;

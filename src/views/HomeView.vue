@@ -16,18 +16,26 @@
         </div>
       </div>
     </div>
+    <div class="todo-app-card">
+      <div class="todo-app-header">TASKS</div>
+      <div class="todo-app-container">
+        <TodoCard category="productivity" />
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
 import NavBar from "../components/NavBar.vue";
 import CategorizedCard from "../components/CategorizedCard.vue";
+import TodoCard from "../components/TodoCard.vue";
 
 export default {
   name: "HomeView",
   components: {
     NavBar,
     CategorizedCard, // Added missing component reference
+    TodoCard,
   },
 };
 </script>
@@ -38,6 +46,17 @@ export default {
   box-sizing: border-box;
   padding: 0; /* Changed 'none' to '0' */
   margin: 0; /* Changed 'none' to '0' */
+}
+.todo-app-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.1em;
+  overflow: auto;
+  width:100%;
+  border-radius: 50px;
+  white-space: nowrap;
+  background-color: #f9f9f9;
 }
 .home-view-categorized-card-container-item{
   display: flex;
@@ -69,11 +88,17 @@ export default {
 .category-card-carousel::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
-.category-header {
-  font-size: 0.8em;
-  font-weight: bolder;
-  color: grey;
-  padding: 1.1em;
+.category-header{
+  font-size: 0.8em !important;
+  font-weight: bolder !important;
+  color: grey !important;
+  padding: 1.1em !important;
+}
+.todo-app-header {
+  font-size: 0.8em !important;
+  font-weight: bolder !important;
+  color: grey !important;
+  padding: 1.1em !important;
 }
 .home-view {
   margin-top: 2.3em;
