@@ -86,6 +86,7 @@ export default {
   color: #fff;
   -webkit-box-shadow: 5px 5px 15px -3px rgba(0,0,0,0.67);
   box-shadow: 5px 5px 15px -3px rgba(0,0,0,0.67);
+  transition: all 0.3s; 
 }
 .add-todo-btn:hover {
   background-color: #000;
