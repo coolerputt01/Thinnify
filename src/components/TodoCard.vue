@@ -35,10 +35,10 @@ export default {
   },
   computed: {
     checkboxStyle() {
-      if (!this.isChecked) return {}; // Default border-only style when unchecked
-      const color = this.categoryColors[this.category] || "#576574"; // Default gray if category not found
+      const color = this.categoryColors[this.category] || "#576574";
+       // Default gray if category not found
       return {
-        backgroundColor: color,
+        backgroundColor: this.isChecked ? color : "transparent",
         borderColor: color,
       };
     },
@@ -65,11 +65,12 @@ input[type="checkbox"] {
   display: inline-block;
   width: 24px;
   height: 24px;
-  border: 2px solid #333;
   border-radius: 50%;
   position: relative;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow:5px 5px 15px -3px rgba(0,0,0,0.15);
+  border: 2px solid #333; 
 }
 
 .todo-app-card {
@@ -85,8 +86,8 @@ input[type="checkbox"] {
   border-bottom: 1px solid #e9ecef;
   width: 100%;
   height: 7vh;
-  -webkit-box-shadow: 5px 5px 31px 8px rgba(0, 0, 0, 0.07);
-  box-shadow: 5px 5px 31px 8px rgba(0, 0, 0, 0.07);
+  -webkit-box-shadow: 5px 5px 15px -3px rgba(0,0,0,0.15); 
+  box-shadow: 5px 5px 15px -3px rgba(0,0,0,0.15);
   margin: 1em;
   flex: 0 0 auto;
   transition: all 0.3s;

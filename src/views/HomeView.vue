@@ -26,7 +26,7 @@
         <TodoCard category="goals" todo-text="Wash the dishes." />
       </div>
     </div>
-    <div class="add-todo-btn">
+    <div class="add-todo-btn" @click="addTodo">
       <i class="fa fa-plus"></i>
     </div>
   </section>
@@ -44,6 +44,11 @@ export default {
     CategorizedCard, // Added missing component reference
     TodoCard,
   },
+  methods:{
+    addTodo(){
+      this.$router.push('/create-todo');
+    }
+  }
 };
 </script>
 
@@ -79,8 +84,8 @@ export default {
   justify-content: center;
   align-items: center;
   color: #fff;
-  -webkit-box-shadow: 5px 5px 31px 8px rgba(0, 0, 0, 0.07);
-  box-shadow: 5px 5px 31px 8px rgba(0, 0, 0, 0.07);
+  -webkit-box-shadow: 5px 5px 15px -3px rgba(0,0,0,0.67);
+  box-shadow: 5px 5px 15px -3px rgba(0,0,0,0.67);
 }
 .add-todo-btn:hover {
   background-color: #000;
