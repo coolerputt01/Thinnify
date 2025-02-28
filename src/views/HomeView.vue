@@ -46,7 +46,7 @@ export default {
   },
   methods:{
     addTodo(){
-      this.$router.push('/create-todo');
+      this.$router.push({ name: 'todo-transition', params: { page: "create-todo" } });
     }
   }
 };
@@ -76,7 +76,7 @@ export default {
   bottom: 2em;
   right: 2em;
   padding: 2em !important;
-  background-color: blue;
+  background-color: #3498db;
   border-radius: 50%;
   width: 3em;
   height: 3em;

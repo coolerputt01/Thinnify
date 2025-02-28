@@ -39,7 +39,7 @@ export default {
         required:true
     },
     taskNo: {
-        type:Number,
+        type:String,
         required:true
         },
     progressValue: {

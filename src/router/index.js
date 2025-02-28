@@ -16,6 +16,13 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/CreateView.vue"),
   },
+  {
+    path: "/todo-transition:page",
+    name: "todo-transition",
+    props: true,
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Transition.vue"),
+  }
 ];
 
 const router = createRouter({

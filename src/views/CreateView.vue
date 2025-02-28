@@ -1,32 +1,34 @@
 <template>
   <div class="create-todo-container">
-    <div class="cancel-todo-create">
+    <div class="cancel-todo-create" @click="this.$router.push({ name: 'todo-transition', params: { page: '/' } });">
       <i class="fa-solid fa-x"></i>
     </div>
     <div class="form-container">
       <form class="form" action="">
         <input type="text" placeholder="Enter new task" v-model="task" class="task-input">
         <div class="selection-div">
-        <button class="enter-edate">
+        <button class="enter-edate" @click.prevent="">
           <i class="fa-solid fa-calendar-week"></i>
           <p>Today</p>
         </button>
         <div class="dropdown">
-          <button class="dropdown-button">
+          <button class="dropdown-button" @click.prevent="">
             category
           </button>
           <div class="dropdown-content">
-            <div class="category">1</div>
-            <div class="category">2</div>
-            <div class="category">3</div>
-            <div class="category">4</div>
+            <div class="category">Personal</div>
+            <div class="category">Productivity</div>
+            <div class="category">Goals</div>
+            <div class="category">Others</div>
           </div>
         </div>
         </div>
+        <div class="submit-button">New Task</div>
       </form>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "CreateView",
@@ -57,8 +59,17 @@ export default {
 }
 .cancel-todo-create {
   font-family: "Font Awesome 5 Free" !important;
-  padding: 0.5em;
-  border:2px solid grey;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top:5%;
+  right:9%;
+}
+.cancel-todo-create > i {
+  border: 2px solid grey;
+  border-radius: 56px;
+  padding:0.5em;
+  font-size: 1.1em;
 }
 .form-container{
   display: flex;
@@ -66,6 +77,23 @@ export default {
   align-items: center;
   padding:2.5em;
   flex-direction:column;
+}
+.submit-button{
+  background-color: #3498db;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  width:40vw;
+  position:fixed;
+  bottom:15%;
+  right:15%;
+  text-align:center;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 56px;
+  transition:all 0.3s;
+  -webkit-box-shadow: 5px 5px 15px 2px rgba(41,13,255,0.31); 
+  box-shadow: 5px 5px 15px 2px rgba(41,13,255,0.31);
 }
 .enter-edate {
   padding:1em;
@@ -91,12 +119,19 @@ export default {
 .enter-edate > p{
   color:grey;
 }
+.form{
+  padding:1.1em;
+}
 .create-todo-container {
   display: flex;
   justify-content: center;
-  align-ditems: center;
-  height: 100vh;
+  align-items: center;
+  height: 97vh;
+  position: relative;
+  overflow-x: hidden;
+  background-color: #f9f9f9;
 }
+
 .selection-div{
   display: flex;
   justify-content: space-between;
