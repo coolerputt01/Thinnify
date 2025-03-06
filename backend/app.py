@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from datetime import date
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -9,31 +11,35 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tododb.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 database = SQLAlchemy(app)
+migrate = Migrate(app, database)
 
 # Todo Model
 class Todo(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     task = database.Column(database.String(200), nullable=False)
     completed = database.Column(database.Boolean, default=False)
-    category = database.Column(database.String(200), nullable=False)
-
-with app.app_context():
-    database.create_all()
+    category = database.Column(database.String(200), nullable=True,default='Others')
+    timestamp = database.Column(database.Date, default=date.today())
+    print(timestamp)
 
 # Custom 404 Error Page
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
-# Get All Todos
-@app.route('/api/todos', methods=['GET'])
+@app.route('/api/todos', methods=['GET'], strict_slashes=False)
 def get_todos():
-    todos = database.session.query(Todo).all()
-    if not todos:
-        return jsonify({"error": "No todos found. You need to create some first!"}), 404
-
+    query = str(request.args.get('search', '')).lower()
+    todos = Todo.query.all()
+    print(query)
+    if query:
+        todos = [todo for todo in todos if query in todo.task.lower()]
+    
+    if not todos:  # Check if the filtered list is empty
+        return jsonify({"error": "No Tasks Found"}), 404
+    
     return jsonify([
-        {"id": todo.id, "task": todo.task, "completed": todo.completed, "category": todo.category}
+        {"id": todo.id, "task": todo.task, "completed": todo.completed, "category": todo.category, "timestamp": todo.timestamp}
         for todo in todos
     ]), 200
 
@@ -54,9 +60,9 @@ def get_individual_todo(id):
 # Create a New Todo
 @app.route('/api/todo', methods=['POST'])
 def create_todo():
-    data = request.json
+    data = request.get_json()
 
-    if 'task' not in data or 'category' not in data:
+    if not data or 'task' not in data or 'category' not in data:
         return jsonify({"error": "Task and category are required fields"}), 400
 
     new_todo = Todo(
@@ -72,7 +78,8 @@ def create_todo():
         "id": new_todo.id,
         "task": new_todo.task,
         "completed": new_todo.completed,
-        "category": new_todo.category
+        "category": new_todo.category,
+        "timestamp": new_todo.timestamp
     }}), 201
 
 # Update a Todo
@@ -82,8 +89,11 @@ def update_task(id):
     if not todo:
         return jsonify({"error": "Task not found"}), 404
 
-    data = request.json
+    data = request.get_json()
     
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
     # Update attributes if provided
     if 'task' in data:
         todo.task = data['task']
@@ -100,7 +110,8 @@ def update_task(id):
             "id": todo.id,
             "task": todo.task,
             "completed": todo.completed,
-            "category": todo.category
+            "category": todo.category,
+            "timestamp": todo.timestamp
         }
     })
 
@@ -117,4 +128,6 @@ def delete_todo(id):
     return jsonify({"message": "Todo deleted successfully!"}), 200
 
 if __name__ == "__main__":
+    with app.app_context():
+        database.create_all()
     app.run(debug=True)
