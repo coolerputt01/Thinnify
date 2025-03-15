@@ -1,133 +1,126 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, jsonify, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from datetime import date
 from flask_migrate import Migrate
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
-
-# Database Config
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tododb.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-database = SQLAlchemy(app)
-migrate = Migrate(app, database)
+app.config['SECRET_KEY'] = 'todo'
+
+# Initialize extensions
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+CORS(app)
+
+# User Model
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
 
 # Todo Model
-class Todo(database.Model):
-    id = database.Column(database.Integer, primary_key=True)
-    task = database.Column(database.String(200), nullable=False)
-    completed = database.Column(database.Boolean, default=False)
-    category = database.Column(database.String(200), nullable=True,default='Others')
-    timestamp = database.Column(database.Date, default=date.today())
-    print(timestamp)
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    category = db.Column(db.String(120), nullable=False, default='Others')
+    completed = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('todos', lazy=True))
 
-# Custom 404 Error Page
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'category': self.category,
+            'completed': self.completed,
+            'user_id': self.user_id
+        }
 
-@app.route('/api/todos', methods=['GET'], strict_slashes=False)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+    new_user = User(username=data['username'], password=hashed_password)
+    
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"message": "User created successfully!"}), 201
+    except Exception:
+        return jsonify({"message": "User already exists!"}), 400
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user = User.query.filter_by(username=data['username']).first()
+    
+    if user and bcrypt.check_password_hash(user.password, data['password']):
+        login_user(user)
+        return jsonify({"message": "Logged in successfully!"}), 200
+    return jsonify({"message": "Invalid credentials!"}), 401
+
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({"message": "Logged out successfully!"}), 200
+
+@app.route('/todos', methods=['GET'])
+@login_required
 def get_todos():
-    query = str(request.args.get('search', '')).lower()
-    todos = Todo.query.all()
-    print(query)
+    todos = Todo.query.filter_by(user_id=current_user.id).all()
+    return jsonify([todo.to_dict() for todo in todos]), 200
+
+@app.route('/todos/search', methods=['GET'])
+@login_required
+def search_todos():
+    query = request.args.get('query')
     if query:
-        todos = [todo for todo in todos if query in todo.task.lower()]
-    
-    if not todos:  # Check if the filtered list is empty
-        return jsonify({"error": "No Tasks Found"}), 404
-    
-    return jsonify([
-        {"id": todo.id, "task": todo.task, "completed": todo.completed, "category": todo.category, "timestamp": todo.timestamp}
-        for todo in todos
-    ]), 200
+        todos = Todo.query.filter(Todo.title.like(f'%{query}%'), Todo.user_id == current_user.id).all()
+        return jsonify([todo.to_dict() for todo in todos]), 200
+    return jsonify({"message": "No search query provided."}), 400
 
-# Get a Single Todo by ID
-@app.route('/api/todo/<int:id>', methods=['GET'])
-def get_individual_todo(id):
-    todo = database.session.get(Todo, id)
-    if not todo:
-        return jsonify({"error": "Invalid ID. The todo might not exist."}), 404
-
-    return jsonify({
-        "id": todo.id,
-        "task": todo.task,
-        "completed": todo.completed,
-        "category": todo.category
-    })
-
-# Create a New Todo
-@app.route('/api/todo', methods=['POST'])
+@app.route('/todo', methods=['POST'])
+@login_required
 def create_todo():
     data = request.get_json()
+    new_todo = Todo(title=data['title'], category=data['category'], user_id=current_user.id)
+    db.session.add(new_todo)
+    db.session.commit()
+    return jsonify(new_todo.to_dict()), 201
 
-    if not data or 'task' not in data or 'category' not in data:
-        return jsonify({"error": "Task and category are required fields"}), 400
-
-    new_todo = Todo(
-        task=data['task'],
-        category=data['category'],
-        completed=data.get('completed', False)  # Default to False if not provided
-    )
-
-    database.session.add(new_todo)
-    database.session.commit()
-
-    return jsonify({"message": "Todo created successfully!", "todo": {
-        "id": new_todo.id,
-        "task": new_todo.task,
-        "completed": new_todo.completed,
-        "category": new_todo.category,
-        "timestamp": new_todo.timestamp
-    }}), 201
-
-# Update a Todo
-@app.route('/api/todo/<int:id>', methods=['PUT'])
-def update_task(id):
-    todo = database.session.get(Todo, id)
-    if not todo:
-        return jsonify({"error": "Task not found"}), 404
-
+@app.route('/todo/<int:todo_id>', methods=['PUT'])
+@login_required
+def update_todo(todo_id):
+    todo = Todo.query.get(todo_id)
+    if not todo or todo.user_id != current_user.id:
+        return jsonify({"message": "Unauthorized or not found!"}), 403
     data = request.get_json()
-    
-    if not data:
-        return jsonify({"error": "No data provided"}), 400
+    todo.completed = data.get('completed', todo.completed)
+    db.session.commit()
+    return jsonify(todo.to_dict()), 200
 
-    # Update attributes if provided
-    if 'task' in data:
-        todo.task = data['task']
-    if 'completed' in data:
-        todo.completed = data['completed']
-    if 'category' in data:
-        todo.category = data['category']
-    
-    database.session.commit()
-    
-    return jsonify({
-        "message": "Task updated successfully!",
-        "task": {
-            "id": todo.id,
-            "task": todo.task,
-            "completed": todo.completed,
-            "category": todo.category,
-            "timestamp": todo.timestamp
-        }
-    })
-
-# Delete a Todo
-@app.route('/api/todo/<int:id>', methods=['DELETE'])
-def delete_todo(id):
-    todo = database.session.get(Todo, id)
-    if not todo:
-        return jsonify({"error": "Todo not found"}), 404
-
-    database.session.delete(todo)
-    database.session.commit()
-    
+@app.route('/todo/<int:todo_id>', methods=['DELETE'])
+@login_required
+def delete_todo(todo_id):
+    todo = Todo.query.get(todo_id)
+    if not todo or todo.user_id != current_user.id:
+        return jsonify({"message": "Unauthorized or not found!"}), 403
+    db.session.delete(todo)
+    db.session.commit()
     return jsonify({"message": "Todo deleted successfully!"}), 200
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     with app.app_context():
-        database.create_all()
+        db.create_all()
     app.run(debug=True)
