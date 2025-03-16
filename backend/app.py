@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_cors import CORS
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
@@ -32,6 +33,8 @@ class Todo(db.Model):
     completed = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('todos', lazy=True))
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    endate = db.Column(db.String(120), nullable=True)
 
     def to_dict(self):
         return {
@@ -39,12 +42,15 @@ class Todo(db.Model):
             'title': self.title,
             'category': self.category,
             'completed': self.completed,
-            'user_id': self.user_id
+            'user_id': self.user_id,
+            'endate': self.endate,
+            'created': self.created,
         }
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
+
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -94,7 +100,7 @@ def search_todos():
 @login_required
 def create_todo():
     data = request.get_json()
-    new_todo = Todo(title=data['title'], category=data['category'], user_id=current_user.id)
+    new_todo = Todo(title=data['title'], category=data['category'],endate=data['endate'], user_id=current_user.id)
     db.session.add(new_todo)
     db.session.commit()
     return jsonify(new_todo.to_dict()), 201
