@@ -9,3 +9,4 @@ Color: #ff5d2b;
 <a href="https://imgbb.com/"><img src="https://i.ibb.co/4nNgvGNm/Thinnfy-Landing-page-image.gif" alt="Thinnfy Landing page image" border="0"></a><br /><a target='_blank' href='https://imgbb.com/'>picture host</a><br />
 <a href="https://imgbb.com/"><img src="https://i.ibb.co/TMhZvWWy/Thinnify-Logo.png" alt="Thinnify Logo" border="0"></a>
 <div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe id="js_video_iframe" src="https://jumpshare.com/embed/grGp0d4eUZ4vVlixk9Qg" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+

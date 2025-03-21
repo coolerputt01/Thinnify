@@ -15,9 +15,9 @@
                     <h2 class="today-head">Today's Task</h2>
                     <button class="view-btn">View Tasks</button>
                 </div>
-                <div class="loaded">
-                    <div class="loader"></div>
-                </div>
+                <n-config-provider>
+                    <n-progress type="line" :percentage="70" :height="10" color="#00ff9c" />
+                </n-config-provider>
             </div>
             <div class="in-progress">
                 <span class="progress-card">
@@ -26,7 +26,7 @@
                         <small>6</small>
                     </span>
                     <div class="progress-carousel">
-                        <CarouselItemCard  category="Personal" :src="require('@/assets/personal.svg')" :progress="70"/>
+                        <CarouselItemCard  category="Personal" :src="require('../assets/personal.svg')" :progress="70"/>
                     </div>
                 </span>
             </div>
@@ -37,7 +37,6 @@
 <script>
     import VLazyImage from 'v-lazy-image';
     import axios from "axios";
-    import { onMounted } from 'vue';
     axios.defaults.withCredentials = true;
     import NavBar from '@/components/NavBar.vue';
     import CarouselItemCard from '@/components/CarouselItemCard.vue';
@@ -48,17 +47,17 @@
             CarouselItemCard,
             VLazyImage,
         },props:['user'],
-        setup(){
-            const fetchTodoFromDate = async() => {
+        methods: {
+            async fetchTodoFromDate(){
                 try{
-                    const response = await axios.get('http://127.0.0.1:5000/todos');
+                    const response = await axios.get('http://127.0.0.1:5000/check-session');
                     console.log(response);
                 }catch(err){
                     console.error("Pele bro, e dey happen",err.message);
                 }
-            };
-
-            onMounted(fetchTodoFromDate);
+            },
+        },async mounted(){
+            await this.fetchTodoFromDate();
         }
     }
 </script>
@@ -75,6 +74,10 @@
         align-items: center;
         flex-direction: column;
         width: 100vw !important;
+        overflow-x: hidden;
+    }
+    section {
+        overflow-x: hidden;
     }
     .main-nav {
         display: flex;
@@ -155,7 +158,7 @@
     }
     .today-head {
         font-weight: bold;
-        font-size: 1.2em !important;
+        font-size: 1.5em !important;
         width: 100% !important;
         margin-bottom: 10% !important;
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="carousel-item-card">
         <div class="icon">
-            <img src="jjj" alt="Thinnify Thinnify Thinnify Icon" class="card-icon">
+            <img :src="src" alt="Thinnify Thinnify Thinnify Icon" class="card-icon">
         </div>
         <div class="task-title"><h2>{{ category }}</h2></div>
         <ProgressBar :value="progress"></ProgressBar>
