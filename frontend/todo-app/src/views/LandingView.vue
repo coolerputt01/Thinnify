@@ -5,7 +5,7 @@
         <main>
             <!--Then I added the elemental features in containers. PS: I tried to get my SEO skills running well.-->
             <div class="main-image-container">
-                <img src="https://i.ibb.co/4nNgvGNm/Thinnfy-Landing-page-image.gif" alt="Thinnify Thinnify Lady Sitting down." class="main-image">
+                <VLazyImage  src="https://i.ibb.co/4nNgvGNm/Thinnfy-Landing-page-image.gif" alt="Thinnify Thinnify Lady Sitting down." class="main-image" />
             </div>
             <span class="text-container">
                 <h1 class="text-head">Task Management & To-Do List</h1>
@@ -19,8 +19,12 @@
 </template>
 <!--Nothing much as a script but just to export the name of the model component.-->
 <script>
+    import VLazyImage from "v-lazy-image";
     export default {
         name: "LandingView",
+        components: {
+            VLazyImage,
+        }
     }
 </script>
 <!--These are the CSS codes for the already declared HTML elements.-->

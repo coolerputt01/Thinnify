@@ -10,14 +10,19 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'todo'
-
 # Initialize extensions
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-CORS(app)
+CORS(
+    app,
+    origins=["http://localhost:8080"],
+    supports_credentials=True,
+    allow_headers=["Content-Type", "Authorization"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+)
 
 # User Model
 class User(UserMixin, db.Model):
@@ -46,10 +51,22 @@ class Todo(db.Model):
             'endate': self.endate,
             'created': self.created,
         }
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:8080"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    return response
 
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.get(User, int(user_id))
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    return jsonify({"message": "Unauthorized access. Please log in."}), 401
+
 
 
 @app.route('/register', methods=['POST'])
@@ -64,7 +81,6 @@ def register():
         return jsonify({"message": "User created successfully!"}), 201
     except Exception:
         return jsonify({"message": "User already exists!"}), 400
-
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -72,23 +88,20 @@ def login():
     
     if user and bcrypt.check_password_hash(user.password, data['password']):
         login_user(user)
-        return jsonify({"message": "Logged in successfully!"}), 200
+        return jsonify({"message": "Logged in successfully!","userId":user.id,"userName":user.username}), 200
     return jsonify({"message": "Invalid credentials!"}), 401
 
 @app.route('/logout', methods=['POST'])
-@login_required
 def logout():
     logout_user()
     return jsonify({"message": "Logged out successfully!"}), 200
 
 @app.route('/todos', methods=['GET'])
-@login_required
 def get_todos():
     todos = Todo.query.filter_by(user_id=current_user.id).all()
     return jsonify([todo.to_dict() for todo in todos]), 200
 
 @app.route('/todos/search', methods=['GET'])
-@login_required
 def search_todos():
     query = request.args.get('query')
     if query:
@@ -97,7 +110,6 @@ def search_todos():
     return jsonify({"message": "No search query provided."}), 400
 
 @app.route('/todo', methods=['POST'])
-@login_required
 def create_todo():
     data = request.get_json()
     new_todo = Todo(title=data['title'], category=data['category'],endate=data['endate'], user_id=current_user.id)
@@ -106,7 +118,6 @@ def create_todo():
     return jsonify(new_todo.to_dict()), 201
 
 @app.route('/todo/<int:todo_id>', methods=['PUT'])
-@login_required
 def update_todo(todo_id):
     todo = Todo.query.get(todo_id)
     if not todo or todo.user_id != current_user.id:
@@ -117,7 +128,6 @@ def update_todo(todo_id):
     return jsonify(todo.to_dict()), 200
 
 @app.route('/todo/<int:todo_id>', methods=['DELETE'])
-@login_required
 def delete_todo(todo_id):
     todo = Todo.query.get(todo_id)
     if not todo or todo.user_id != current_user.id:
