@@ -11,8 +11,8 @@
                     </div>
                 </span>
                 <span class="icon-group">
-                    <div class="icon-container">
-                        <img src="../assets/add.svg" alt="Thinnify Thinnify nav icon Add" class="add-icon">
+                    <div class="add-icon-container">
+                        <router-link :to="{name:'transition',params:{ page : 'create'}}"><img src="../assets/add.svg" alt="Thinnify Thinnify nav icon Add" class="add-icon"></router-link>
                     </div>
                 </span>
                 <span class="icon-group">
@@ -43,38 +43,53 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(5px);
         position: fixed;
-        bottom: 0;
+        bottom: -2px;
         left: 0;
         width: 100% !important;
+        height: 7vh !important;
         padding: 22px;
         z-index: 1000;
     }
-    .add-icon {
+    /* .add-icon {
         width: 2.7em !important;
         height: 2.7em !important;
-        transform: translateY(-30%);
-    }
+    } */
     .icon-group {
         display: flex;
         align-items: center;
-        justify-content: space-around;
-        width: 40%;
+        justify-content: space-between;
+        width: 50%;
+        gap: 35px;
     }
     .icon-groups {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 30px;
         width: 100%;
     }
     .icon-container > * {
-        width: 1.7em;
-        height: 1.7em;
+        width: 1.9em;
+        height: 1.9em;
         object-fit: cover;
         transition: all 350ms;
         cursor: pointer;
+    }
+    .add-icon-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+    .add-icon {
+        width: 3.2em;
+        height: 3.2em;
+        object-fit: cover;
+        transition: all 350ms;
+        cursor: pointer;
+        transform: translateY(-35%);
     }
     .icon-container > img:hover {
         opacity: 0.8;

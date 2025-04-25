@@ -3,7 +3,7 @@
     <section>
         <main>
             <!--I found out you can declare components like this.-->
-            <ErrorCard ></ErrorCard>
+            <Toast />
             <div class="form">
                 <span class="form-head-container">
                     <h1 class="form-head">SignUp</h1>
@@ -19,7 +19,11 @@
                     <RouterLink to="/">Login</RouterLink>
                 </span>
                 <span class="button-container">
-                    <button class="form-submit" @click="signUpUser">Sign Up</button>
+                    <button class="form-submit" @click="signUpUser">
+                        <p v-if="!isLoading">Sign Up</p>
+                        <ProgressSpinner v-else style="width: 32px; height: 32px" strokeWidth="8" fill="transparent" strokeColor="#fff"
+    animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+                    </button>
                 </span>
             </div>
         </main>
@@ -27,42 +31,59 @@
 </template>
 <!--I used Options API before then because i had to use the provide/inject API from Vue whivh are basically Compostion API tools I had to switch.-->
 <script>
-    import { ref ,provide} from 'vue';
+    import { ref } from 'vue';
     //I guess I never knew you could import Router component until now.Before I always used this.$router.push('/route').
     import { useRouter } from 'vue-router';
+    import Toast from 'primevue/toast';
+    import { useToast } from 'primevue/usetoast';
+    import ProgressSpinner from 'primevue/progressspinner';
     import axios from 'axios';
-    import ErrorCard from '../components/ErrorCard.vue';
     export default {
         name:"SignupView",
         components:{
-            ErrorCard,
+            Toast,
+            ProgressSpinner,
         },
         setup(){
             let router = useRouter();
             const password = ref("");
             const cpassword = ref("");
             const username = ref("");
-            const errorOccured = ref(false)
+            const isLoading = ref(false);
+            const toast = useToast();
             const signUpUser = async () => {
                 try{
+                    isLoading.value = true;
                     if(!(password.value.length > 6 && password.value ===cpassword.value)){
-                        errorOccured.value = true;
+                        toast.add({
+                    severity: "error",
+                    summary: "Signup Failed",
+                    detail: "Please use more than 6 characters for password.",
+                    life: 3000
+                });
+                        isLoading.value = false;
                         return
-                    }
+                    }else{
                     const postRequest = axios.post('http://127.0.0.1:5000/register',{username:username.value,password:password.value});
                     console.log(postRequest);
                     router.push('/');
+                    }
                 }catch(error) {
-                    errorOccured.value = true;
+                    toast.add({
+                    severity: "error",
+                    summary: "Login Failed",
+                    detail: "Invalid username or password. Please try again.",
+                    life: 3000
+                });
+                    isLoading.value = false;
                     console.error(error.message);
                 }
             }
-            provide("errorOccured",errorOccured);
             return {
                 password,
                 cpassword,
                 username,
-                errorOccured,
+                isLoading,
                 signUpUser,
             }
         },
@@ -102,17 +123,19 @@
         border-radius: 3%;
         padding: 30px;
         flex-shrink: 0;
+        padding-bottom: 56px;
     }
     .form-head-container {
         width: 95% !important;
         text-align: left;
-        margin: 5%;
+        margin: 3%;
     }
     .input-group {
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        margin: 0 auto;
     }
     .input-group > * {
         width: 40vw;
@@ -120,7 +143,7 @@
         outline: none;
         border: none;
         background-color: #cccccc;
-        margin: 5%;
+        margin: 3%;
         border-radius: 50px;
         padding: 8px;
         flex-shrink: 0;
@@ -140,6 +163,22 @@
             height: 5vh !important;
         }
     }
+    @media (max-width: 480px) {
+        .form-head-container {
+            margin: 2% !important;
+        }
+        .form {
+            padding: 24px !important;
+        }
+        .form-submit {
+            width: 50vw !important;
+        }
+        .input-group > * {
+            width: 50vw !important;
+            height: 4vh !important;
+        }
+        
+    }
     .input-group > input:focus {
         outline: none;
         border: none;
@@ -155,10 +194,10 @@
         font-size:0.9em;
     }
     .button-container {
-        margin: 3%;
         display: flex;
         overflow: hidden;
         background-clip: cover;
+        margin: 0 auto;
     }
     .form-submit {
         outline: none;

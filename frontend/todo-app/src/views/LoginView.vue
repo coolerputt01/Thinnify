@@ -1,7 +1,7 @@
 <template>
     <section>
         <main>
-            <ErrorCard ></ErrorCard>
+            <Toast />
             <div class="form">
                 <span class="form-head-container">
                     <h1 class="form-head">Login</h1>
@@ -15,46 +15,62 @@
                     <RouterLink to="/signup">Signup</RouterLink>
                 </span>
                 <span class="button-container">
-                    <button class="form-submit" @click="LogInUser">Login</button>
+                    <button class="form-submit" @click="LogInUser" v-ripple>
+                        <p v-if="!isLoading">Login</p>
+                        <ProgressSpinner v-else style="width: 32px; height: 32px" strokeWidth="8" fill="transparent" strokeColor="#fff"
+    animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+                    </button>
                 </span>
             </div>
         </main>
     </section>
 </template>
 <script>
-    import { ref ,provide} from 'vue';
+    import { ref } from 'vue';
     import { useRouter } from 'vue-router';
     import axios from 'axios';
     axios.defaults.withCredentials = true;
-    import ErrorCard from '../components/ErrorCard.vue';
+    import Toast from 'primevue/toast';
+    import { useToast } from 'primevue/usetoast';
+    import ProgressSpinner from 'primevue/progressspinner';
     export default {
         name:"LoginView",
         components:{
-            ErrorCard
+            Toast,
+            ProgressSpinner,
         },
         setup(){
             let router = useRouter();
             const password = ref("");
             const username = ref("");
-            const errorOccured = ref(false)
+            const isLoading = ref(false);
+            const toast = useToast();
             const user = ref("");
             const LogInUser = async () => {
                 try{
+                    isLoading.value = true;
                     const postRequest = await axios.post('http://127.0.0.1:5000/login',{username:username.value,password:password.value});
-                    console.log(postRequest);
-                    user.value = postRequest.data.userName;
+                    const { access_token, userName } = postRequest.data;
+                    user.value = userName;
                     console.log(user.value)
+                    localStorage.setItem("access_token", access_token);
+                    localStorage.setItem("username", userName);
                     router.push({name:'home',params:{user : user.value}});
                 }catch(error) {
-                    errorOccured.value = true;
-                    console.error(error.message,"How far bro?");
+                    toast.add({
+                    severity: "error",
+                    summary: "Login Failed",
+                    detail: "Invalid username or password. Please try again.",
+                    life: 3000
+                });
+                isLoading.value = false;
+                console.error(error.message,"How far bro?");
                 }
             }
-            provide("errorOccured",errorOccured);
             return {
                 password,
                 username,
-                errorOccured,
+                isLoading,
                 LogInUser,
             }
         },
@@ -65,7 +81,7 @@
         margin: 0;
         padding: 0; 
         box-sizing: border-box;
-        font-family: "Urbanist",sans-serif;
+        font-family: "Urbanist",sans-serif !important;
     }
     main {
         display: flex;
@@ -99,6 +115,10 @@
         text-align: left;
         margin: 5%;
     }
+    .white{
+        color: #fff !important;
+        background-color: #fff !important;
+    }
     .input-group {
         display: flex;
         align-items: center;
@@ -131,6 +151,23 @@
             height: 5vh !important;
         }
     }
+    @media (max-width: 480px) {
+        .form-head-container {
+            margin: 2% !important;
+        }
+        .form {
+            padding: 24px !important;
+        }
+        .form-submit {
+            width: 50vw !important;
+        }
+        .input-group > * {
+            width: 50vw !important;
+            height: 4vh !important;
+        }
+        
+    }
+
     .input-group > input:focus {
         outline: none;
         border: none;

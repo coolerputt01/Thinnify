@@ -104,4 +104,8 @@
         width: 2.3em;
         height: 2.3em;
     }
+    .redirect-btn:hover .icon {
+        transform: translateX(15px);
+        transition: all 250ms;
+    }
 </style>

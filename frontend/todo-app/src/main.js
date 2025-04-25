@@ -1,10 +1,13 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
-import { create, NConfigProvider, NProgress} from 'naive-ui';
+import PrimeVue from 'primevue/config';
+import Aura from '@primeuix/themes/aura';
+import ToastService from 'primevue/toastservice';
 
-const naive = create({
-    components: [NConfigProvider, NProgress]
-  });
 
-createApp(App).use(naive).use(router).mount('#app')
+createApp(App).use(PrimeVue,{
+  theme: {
+      preset: Aura
+  }
+}).use(ToastService).use(router).mount('#app')
