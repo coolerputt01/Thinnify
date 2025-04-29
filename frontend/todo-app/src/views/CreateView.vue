@@ -3,18 +3,18 @@
       <main>
         <nav class="nav-bar">
           <div class="icon">
-            <img src="../assets/leftarrow.svg" alt="Back Icon" class="back-icon" />
+            <img src="../assets/leftarrow.svg" alt="Back Icon" class="back-icon" @click="goHome"/>
           </div>
-          <h1>Add Project</h1>
+          <h1>Add Task</h1>
         </nav>
-  
+        <Toast />
         <section class="form">
           <Select
-            v-model="title"
+            v-model="category"
             :options="categories"
             optionLabel="name"
             placeholder="Select Category"
-            fluid=true
+            :fluid="true"
           >
             <!-- Selected value display -->
             <template #value="slotProps">
@@ -35,7 +35,30 @@
           </Select>
           <div class="input-container">
             <p>Task Name</p>
-            <input type="text" class="input-field" />
+            <input type="text" class="input-field" v-model="task"/>
+          </div>
+          <div class="date">
+            <div class="date-input">
+                <div class="date-info-text">
+                  <p class="date-mini-text">Start Date</p>
+                  <p> {{ new Date().toLocaleDateString() }}</p>
+                </div>
+                <img src="../assets/calender.svg" alt="slotProps.option.label" class="option-icon" />
+            </div>
+            <div class="date-input" @click="visible = true" label="Show">
+                <div class="date-info-text">
+                  <p class="date-mini-text">End Date</p>
+                  <p> {{ date ? date.toLocaleDateString() : 'Select a date' }}</p>
+                </div>
+                <img src="../assets/calender.svg" alt="slotProps.option.label" class="option-icon" />
+            </div>
+            <Dialog v-model:visible="visible" modal header="Choose a Date" :style="{ width: '25rem' }">
+              <VDatePicker v-model="date" />
+            </Dialog>
+          </div>
+          <div class="button-container">
+            <button class="submit-button" @click="postTask()"><p v-if="!isLoading">Add Task</p> <ProgressSpinner v-else style="width: 32px; height: 32px" strokeWidth="8" fill="transparent" strokeColor="#fff"
+              animationDuration=".5s" aria-label="Custom ProgressSpinner" /></button>
           </div>
         </section>
       </main>
@@ -43,18 +66,71 @@
   </template>
   
   <script>
-  import { ref } from 'vue'
-  import Select from 'primevue/select'
+  import { ref } from 'vue';
+  import Select from 'primevue/select';
+  import Dialog from 'primevue/dialog';
+  import Toast from 'primevue/toast';
+  import axios from 'axios';
+  import ProgressSpinner from 'primevue/progressspinner';
+  import { useToast } from 'primevue/usetoast';
+  import { useRouter } from 'vue-router';
   
   export default {
     name: 'CreateView',
     props: ['user'],
     components: {
-      Select
+      Select,
+      Dialog,
+      ProgressSpinner,
+      Toast,
     },
     setup() {
-      const title = ref(null)
-  
+      const visible = ref(false);
+      const category = ref('');
+      const date = ref(null);
+      const task = ref('');
+      const isLoading = ref(false);
+      const username = ref(localStorage.getItem('username'));
+      const router = useRouter();
+      const toast = useToast();
+      const postTask = async () => {
+          try {
+              isLoading.value = true;
+              const response = await axios.post('http://127.0.0.1:5000/todo',{
+                title: task.value,
+                category: category.value.name,
+                endate: date.value,
+              },{
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('access_token')}`
+                }
+              });
+              toast.add({
+                    severity: "success",
+                    summary: "Todo Created",
+                    detail: "Todo has been created successfully.",
+                    life: 3000
+                });
+              isLoading.value = false;
+              task.value = '';
+              category.value = '';
+              date.value = null;
+              console.log(category.value.name,"hi")
+              console.log('Task posted successfully:', response.data);
+          }catch (error) {
+              isLoading.value = false;
+              console.log(category.value,"hi")
+              console.error('Error posting task:', error.message);
+          }
+      }
+      const goHome = () => {
+        const username = localStorage.getItem('username');
+        console.log(username);
+        router.push({ 
+          name: 'transition', 
+          params: { page : 'home',user: username } 
+        });
+    };
       const categories = [
         { name: 'Personal', icon: require('../assets/personal.svg'), color: 'rgba(140, 201, 255,0.3)' },
         { name: 'Productivity', icon: require('../assets/productivity.svg'), color: 'rgba(248, 143, 255,0.3)' },
@@ -65,8 +141,15 @@
 
   
       return {
-        title,
-        categories
+        categories,
+        username,
+        goHome,
+        visible,
+        date,
+        postTask,
+        task,
+        category,
+        isLoading,
       }
     }
   }
@@ -84,13 +167,79 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    box-shadow: -16px 15px 22px 11px rgba(0,0,0,0.05);
+    box-shadow: -16px 15px 22px 11px rgba(0,0,0,0.01);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 28px !important;
     padding: 12px;
     width: 85vw;
     margin-top: 20px;
     background-color: #fff;
     flex: 0 0 auto;
+  }
+  .button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 28px !important;
+    padding: px;
+    width: 85vw;
+    margin-top: 8%;
+    flex: 0 0 auto;
+  }
+  .button-container > button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 50px;
+    border: none;
+    font-size: 1.5em;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: #ff5d2b;
+    color: white;
+  }
+  .date-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 28px !important;
+    padding: 12px;
+    width: 85vw;
+    margin-top: 20px;
+    background-color: #fff;
+    flex: 0 0 auto;
+    background-color: rgba(226, 226, 255, 0.226);
+  }
+  .date-input > p {
+    font-weight: 600;
+  }
+  .date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 12px;
+    width: 95vw;
+    height: 50% !important;
+    margin-top: 10%;
+    background-color: #fff;
+    flex: 0 0 auto;
+  }
+  .date > * {
+    margin: 3%;
+  }
+  .date-input:hover {
+    opacity: 0.8;
+    filter: contrast(40%);
+    transition: all 0.3s ease-in-out;
+  }
+  .date-info-text > .date-mini-text {
+    font-size: 0.8em;
+    font-weight: 500 !important;
+    color: grey;
   }
   .input-container > * {
     margin-left: 8%;
@@ -101,7 +250,6 @@
     color: grey;
     width: 100%;
     text-align: left;
-    padding: 12px !important;
   }
   .input-container > input {
     width: 100%;
@@ -109,7 +257,7 @@
     padding: 5px;
     border-radius: 5px;
     border: none;
-    font-size: 1.4em;
+    font-size: 1.2em;
     font-weight: 500;
     outline: none;
     transition: border-color 0.3s ease;

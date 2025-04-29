@@ -49,7 +49,7 @@
                     </div>
                 </span>
             </div>
-            <NavBar />
+            <NavBar/>
         </main>
     </section>
 </template>
@@ -68,11 +68,11 @@
     export default {
         name: 'HomeView',
         components: {
-            NavBar,
             CarouselItemCard,
             CircleProgress,
             VLazyImage,
             TodoCard,
+            NavBar
         },
         props: ['user'],
         setup() {

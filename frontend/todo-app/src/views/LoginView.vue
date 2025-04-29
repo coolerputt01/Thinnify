@@ -15,9 +15,9 @@
                     <RouterLink to="/signup">Signup</RouterLink>
                 </span>
                 <span class="button-container">
-                    <button class="form-submit" @click="LogInUser" v-ripple>
+                    <button class="form-submit" @click="LogInUser">
                         <p v-if="!isLoading">Login</p>
-                        <ProgressSpinner v-else style="width: 32px; height: 32px" strokeWidth="8" fill="transparent" strokeColor="#fff"
+                        <ProgressSpinner v-else style="width: 32px; height: 32px" :strokeWidth="8" fill="transparent" strokeColor="#fff"
     animationDuration=".5s" aria-label="Custom ProgressSpinner" />
                     </button>
                 </span>

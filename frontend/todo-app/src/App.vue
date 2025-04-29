@@ -1,6 +1,11 @@
 <template>
     <router-view />
 </template>
+<script>
+  export default {
+    name: "App",
+  };
+</script>
 <style>
 * {
   font-family: "Urbanist",sans-serif;
@@ -48,8 +53,3 @@
   align-items: center !important;
 }
 </style>
-<script>
-export default {
-  name: "App",
-};
-</script>

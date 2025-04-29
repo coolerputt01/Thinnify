@@ -6,7 +6,7 @@
         <div class="task-title">
             <h2>{{ category }}</h2>
         </div>
-        <ProgressBar :value="progress" showValue="false"></ProgressBar>
+        <ProgressBar :value="progress" :showValue="false"></ProgressBar>
     </div>
 </template>
 

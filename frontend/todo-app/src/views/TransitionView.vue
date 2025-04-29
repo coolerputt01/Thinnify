@@ -43,11 +43,12 @@
 <script>
 export default {
     name: 'TransitionView',
-    props: ['page'],
+    props: ['page','user'],
     methods: {
         onAnimationEnd() {
             // Once the animation ends, redirect to the page passed via props
-            this.$router.push({ name: this.page });
+            console.log(this.user,this.page);
+            this.$router.push({ name: this.page ,params: { user : this.user } });
         }
     }
 }

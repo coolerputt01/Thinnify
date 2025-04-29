@@ -4,23 +4,23 @@
             <span class="icon-groups">
                 <span class="icon-group">
                     <div class="icon-container">
-                        <img src="../assets/home.svg" alt="Thinnify Thinnify nav icon home">
+                        <img src="../assets/home.svg" alt="Thinnify Thinnify nav icon home" class="icon">
                     </div>
                     <div class="icon-container">
-                        <img src="../assets/calender.svg" alt="Thinnify Thinnify nav icon calender">
+                        <router-link :to="{name:'transition',params:{ page : 'calender' ,user:'/'}}"><img src="../assets/calender.svg" alt="Thinnify Thinnify nav icon calender" class="icon"></router-link>
                     </div>
                 </span>
                 <span class="icon-group">
                     <div class="add-icon-container">
-                        <router-link :to="{name:'transition',params:{ page : 'create'}}"><img src="../assets/add.svg" alt="Thinnify Thinnify nav icon Add" class="add-icon"></router-link>
+                        <router-link :to="{name:'transition',params:{ page : 'create' ,user:'/'}}"><img src="../assets/add.svg" alt="Thinnify Thinnify nav icon Add" class="add-icon"></router-link>
                     </div>
                 </span>
                 <span class="icon-group">
                     <div class="icon-container">
-                        <img src="../assets/paper.svg" alt="Thinnify Thinnify nav icon paper">
+                        <img src="../assets/paper.svg" alt="Thinnify Thinnify nav icon paper" class="icon">
                     </div>
                     <div class="icon-container">
-                        <img src="../assets/people.svg" alt="Thinnify Thinnify nav icon people">
+                        <img src="../assets/people.svg" alt="Thinnify Thinnify nav icon people" class="icon">
                     </div>
                 </span>
             </span>
@@ -63,18 +63,20 @@
         width: 50%;
         gap: 35px;
     }
+    
     .icon-groups {
         display: flex;
         align-items: center;
         justify-content: space-between;
         width: 100%;
     }
-    .icon-container > * {
+    .icon {
         width: 1.9em;
         height: 1.9em;
         object-fit: cover;
         transition: all 350ms;
         cursor: pointer;
+        mix-blend-mode: multiply;
     }
     .add-icon-container {
         display: flex;

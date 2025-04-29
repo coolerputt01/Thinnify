@@ -5,6 +5,7 @@ import LoginView from './views/LoginView.vue';
 import SignupView from './views/SignupView.vue';
 import LandingView from './views/LandingView.vue';
 import TransitionView from './views/TransitionView.vue';
+import CalenderView from './views/CalenderView.vue';
 
 
 const routes = [
@@ -13,7 +14,8 @@ const routes = [
   { path: '/signup', component: SignupView },
   { path: '/create', component: CreateView ,name:"create",props:true},
   { path: '/landing',component: LandingView },
-  { path:'/transtion:page',component: TransitionView ,name:"transition",props:true},
+  { path:'/transition/:page/:user',component: TransitionView ,name:"transition",props:true},
+  { path:'/calender/:user',component: CalenderView ,name:"calender",props:true},
 ];
 
 const router = createRouter({

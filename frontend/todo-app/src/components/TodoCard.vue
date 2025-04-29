@@ -11,7 +11,7 @@
                 </span>
             </span>
             <span class="progress-bar">
-                <CircleProgress :percent="progress" :viewport="false" size="60" border-width="7" border-bg-width="7" :fill-color="categoryColor" empty-color="#c7c7c7af" :show-percent="true"/>
+                <CircleProgress :percent="progress" :viewport="false" :size="60" :border-width="7" :border-bg-width="7" :fill-color="categoryColor" empty-color="#c7c7c7af" :show-percent="true"/>
             </span>
         </span>
     </div>
