@@ -162,6 +162,9 @@
     box-sizing: border-box;
     font-family: "Urbanist", sans-serif;
   }
+  main {
+    background-image: linear-gradient(100deg,rgba(211, 211, 211, 0.562),white ,white,white);
+  }
   .input-container {
     display: flex;
     align-items: center;

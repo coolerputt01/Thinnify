@@ -198,7 +198,7 @@
     section {
         overflow-x: hidden;
         overflow-y: scroll;
-        background-image: linear-gradient(30deg, lightgrey,white ,white);
+        background-image: linear-gradient(100deg,rgba(211, 211, 211, 0.562),white ,white,white);
     }
 
         /* For WebKit browsers (Chrome, Safari, Edge) */

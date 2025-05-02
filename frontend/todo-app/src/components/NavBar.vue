@@ -4,7 +4,7 @@
             <span class="icon-groups">
                 <span class="icon-group">
                     <div class="icon-container">
-                        <img src="../assets/home.svg" alt="Thinnify Thinnify nav icon home" class="icon">
+                        <router-link :to="{name:'transition',params:{ page:'home',user: username}}"><img src="../assets/home.svg" alt="Thinnify Thinnify nav icon home" class="icon"></router-link>
                     </div>
                     <div class="icon-container">
                         <router-link :to="{name:'transition',params:{ page : 'calender' ,user:'/'}}"><img src="../assets/calender.svg" alt="Thinnify Thinnify nav icon calender" class="icon"></router-link>
@@ -30,6 +30,11 @@
 <script>
     export default {
         name: 'NavBar',
+        data() {
+            return {
+                username : localStorage.getItem('username'),
+            }
+        }
     }
 </script>
 <style scoped>
