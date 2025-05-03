@@ -66,11 +66,10 @@
   </template>
   
   <script>
-  import { ref } from 'vue';
+  import { ref , getCurrentInstance } from 'vue';
   import Select from 'primevue/select';
   import Dialog from 'primevue/dialog';
   import Toast from 'primevue/toast';
-  import axios from 'axios';
   import ProgressSpinner from 'primevue/progressspinner';
   import { useToast } from 'primevue/usetoast';
   import { useRouter } from 'vue-router';
@@ -93,10 +92,11 @@
       const username = ref(localStorage.getItem('username'));
       const router = useRouter();
       const toast = useToast();
+      const { proxy } = getCurrentInstance();
       const postTask = async () => {
           try {
               isLoading.value = true;
-              const response = await axios.post('http://127.0.0.1:5000/todo',{
+              const response = await proxy.$api.post('/todo',{
                 title: task.value,
                 category: category.value.name,
                 endate: date.value,

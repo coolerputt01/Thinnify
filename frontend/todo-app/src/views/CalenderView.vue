@@ -12,8 +12,7 @@
     </section>
 </template>
 <script>
-import { ref, onMounted, computed } from 'vue';
-import axios from 'axios';
+import { ref, onMounted, computed, getCurrentInstance } from 'vue';
 import Toast from 'primevue/toast';
 import DateTodoCard from '@/components/DateTodoCard.vue';
 import NavBar from '@/components/NavBar.vue';
@@ -30,7 +29,7 @@ export default {
     setup() {
         const dataArray = ref([]);
         const toast = useToast();
-
+        const { proxy } = getCurrentInstance();
         const showToast = ({ task, completed }) => {
             toast.add({
                 severity: completed ? 'success' : 'info',
@@ -41,7 +40,7 @@ export default {
         };
         const fetchTodos = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:5000/todos', {
+                const response = await proxy.$api.get('/todos', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('access_token')}`
                     }

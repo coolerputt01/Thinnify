@@ -58,9 +58,7 @@
     import CircleProgress from "vue3-circle-progress";
     import TodoCard from '@/components/TodoCard.vue';
     import VLazyImage from 'v-lazy-image';
-    import { ref, onMounted,computed } from "vue";
-    import axios from "axios";
-    axios.defaults.withCredentials = true;
+    import { ref, onMounted,computed ,getCurrentInstance} from "vue";
 
     import NavBar from '@/components/NavBar.vue';
     import CarouselItemCard from '@/components/CarouselItemCard.vue';
@@ -122,10 +120,10 @@
             }
         });
     };
-
+    const { proxy } = getCurrentInstance();
     const fetchTodos = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/todos', {
+            const response = await proxy.$api('/todos', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access_token')}`
                 }

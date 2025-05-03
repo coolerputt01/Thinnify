@@ -48,6 +48,10 @@ class Todo(db.Model):
             'created': self.created.isoformat() if self.created else None
         }
 
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return jsonify({"msg": "Token has expired"}), 401
+
 # Register Route
 @app.route('/register', methods=['POST'])
 def register():
@@ -130,6 +134,25 @@ def delete_todo(todo_id):
     db.session.delete(todo)
     db.session.commit()
     return jsonify({"message": "Todo deleted successfully!"}), 200
+
+
+# Search Todos (Protected)
+@app.route('/todos/search', methods=['GET'])
+@jwt_required()
+def search_todos():
+    user_id = get_jwt_identity()
+    query = request.args.get('q', '').strip().lower()
+
+    if not query:
+        return jsonify({"message": "Search query is required"}), 400
+
+    # Simple case-insensitive search in title and category
+    todos = Todo.query.filter(
+        Todo.user_id == user_id,
+        (Todo.title.ilike(f"%{query}%")) | (Todo.category.ilike(f"%{query}%"))
+    ).all()
+
+    return jsonify([todo.to_dict() for todo in todos]), 200
 
 # Run Flask App
 if __name__ == '__main__':

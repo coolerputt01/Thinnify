@@ -16,8 +16,7 @@
     </div>
 </template>
 <script>
-    import {ref , computed , watch} from 'vue';
-    import axios from 'axios';
+    import {ref , computed , watch , getCurrentInstance} from 'vue';
     export default {
         name: 'TodoComp',
         props: {
@@ -45,7 +44,7 @@
         emits: ['status-updated'],
         setup(props, { emit }) {
             const isClicked = ref(props.completed);
-
+            const { proxy } = getCurrentInstance();
             const categoryColor = computed(() => {
                 const colors = {
                     Personal: '#8cc9ff',
@@ -58,7 +57,7 @@
             });
             watch(isClicked, async (newVal) => {
             try {
-                const response = await axios.put(`http://127.0.0.1:5000/todo/${ props.todoId }`, {
+                const response = await proxy.$api.put(`/todo/${ props.todoId }`, {
                     completed: newVal
                 }, {
                     headers: {

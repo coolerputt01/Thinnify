@@ -26,10 +26,8 @@
     </section>
 </template>
 <script>
-    import { ref } from 'vue';
+    import { ref , getCurrentInstance} from 'vue';
     import { useRouter } from 'vue-router';
-    import axios from 'axios';
-    axios.defaults.withCredentials = true;
     import Toast from 'primevue/toast';
     import { useToast } from 'primevue/usetoast';
     import ProgressSpinner from 'primevue/progressspinner';
@@ -46,10 +44,11 @@
             const isLoading = ref(false);
             const toast = useToast();
             const user = ref("");
+            const { proxy } = getCurrentInstance();
             const LogInUser = async () => {
                 try{
                     isLoading.value = true;
-                    const postRequest = await axios.post('http://127.0.0.1:5000/login',{username:username.value,password:password.value});
+                    const postRequest = await proxy.$api.post('/login',{username:username.value,password:password.value});
                     const { access_token, userName } = postRequest.data;
                     user.value = userName;
                     console.log(user.value)

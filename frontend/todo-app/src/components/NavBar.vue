@@ -17,7 +17,7 @@
                 </span>
                 <span class="icon-group">
                     <div class="icon-container">
-                        <img src="../assets/paper.svg" alt="Thinnify Thinnify nav icon paper" class="icon">
+                        <router-link :to="{ name:'transition',params:{ page:'search',user:'/'}}" ><img src="../assets/search.svg" alt="Thinnify Thinnify nav icon paper" class="icon"></router-link>
                     </div>
                     <div class="icon-container">
                         <img src="../assets/people.svg" alt="Thinnify Thinnify nav icon people" class="icon">

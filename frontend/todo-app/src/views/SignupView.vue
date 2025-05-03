@@ -31,13 +31,12 @@
 </template>
 <!--I used Options API before then because i had to use the provide/inject API from Vue whivh are basically Compostion API tools I had to switch.-->
 <script>
-    import { ref } from 'vue';
+    import { ref , getCurrentInstance} from 'vue';
     //I guess I never knew you could import Router component until now.Before I always used this.$router.push('/route').
     import { useRouter } from 'vue-router';
     import Toast from 'primevue/toast';
     import { useToast } from 'primevue/usetoast';
     import ProgressSpinner from 'primevue/progressspinner';
-    import axios from 'axios';
     export default {
         name:"SignupView",
         components:{
@@ -51,6 +50,7 @@
             const username = ref("");
             const isLoading = ref(false);
             const toast = useToast();
+            const { proxy } = getCurrentInstance();
             const signUpUser = async () => {
                 try{
                     isLoading.value = true;
@@ -64,7 +64,7 @@
                         isLoading.value = false;
                         return
                     }else{
-                    const postRequest = axios.post('http://127.0.0.1:5000/register',{username:username.value,password:password.value});
+                    const postRequest = proxy.$api.post('register',{username:username.value,password:password.value});
                     console.log(postRequest);
                     router.push('/');
                     }
