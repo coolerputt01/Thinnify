@@ -24,8 +24,8 @@
     color: transparent !important;
 }
 .p-progressbar {
-  width: 50vw !important;
-  height: 1em !important;
+  width: 90% !important;
+  height: 0.7em !important;
   border-radius: 10px !important;
   background-color: #c7c7c7af !important;
 }
@@ -43,10 +43,6 @@
   border-radius: 10px !important;
 }
 
-/* 🔹 Fix the Progress Spinner color */
-.p-progress-spinner-circle {
-    stroke: #fff !important;
-}
 .vue3-circular-progressbar {
   display: flex !important;
   justify-content: center !important;

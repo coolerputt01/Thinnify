@@ -53,14 +53,10 @@
         bottom: -2px;
         left: 0;
         width: 100% !important;
-        height: 7vh !important;
+        height: 7vh ;
         padding: 22px;
         z-index: 1000;
     }
-    /* .add-icon {
-        width: 2.7em !important;
-        height: 2.7em !important;
-    } */
     .icon-group {
         display: flex;
         align-items: center;
@@ -98,8 +94,13 @@
         cursor: pointer;
         transform: translateY(-35%);
     }
-    .icon-container > img:hover {
+    .icon:hover {
         opacity: 0.8;
         transform: translateY(-15%);
+    }
+    @media (min-width: 768px) {
+        .nav-bar {
+            height: 10vh;
+        }
     }
 </style>

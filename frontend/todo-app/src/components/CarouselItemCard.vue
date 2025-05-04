@@ -62,10 +62,13 @@ export default {
     padding: 25px;
     border-radius: 20px;
     color: white; /* Ensure text is readable */
+    display: flex;
+    flex-direction: column;
+    width: 12em;
     transition: background-color 0.3s ease;
     cursor: pointer;
     transition: all 0.3s ease;
-    flex: 0 0 auto; 
+    flex: 0 0 auto;
 }
 .carousel-item-card:hover {
     transform: scale(1.05);
@@ -76,6 +79,23 @@ export default {
     align-items: center;
     justify-content: flex-end;
     margin-bottom: 10px;
+    position: relative;
+}
+.icon::after {
+    content: '';
+    position: absolute;
+    width: 2em;
+    height: 2em;
+    right:-2.5px;
+    top:-5px;
+    background-color: #ff5d2bbb;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    opacity: 0;
+    z-index: -1;
+}
+.icon:hover::after {
+    opacity: 0.4;
 }
 .card-icon {
     width: 24px;

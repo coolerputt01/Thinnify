@@ -17,8 +17,8 @@
                 <span class="button-container">
                     <button class="form-submit" @click="LogInUser">
                         <p v-if="!isLoading">Login</p>
-                        <ProgressSpinner v-else style="width: 32px; height: 32px" :strokeWidth="8" fill="transparent" strokeColor="#fff"
-    animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+                        <loading :active="isLoading" width="32px" height="32px" color="#fff"
+                            animationDuration=".5s" loader="spinner" background-color="ff5d2bbb" />
                     </button>
                 </span>
             </div>
@@ -26,44 +26,51 @@
     </section>
 </template>
 <script>
+    //This script is pretty much the same as the signup script but with different postData. 
     import { ref , getCurrentInstance} from 'vue';
     import { useRouter } from 'vue-router';
     import Toast from 'primevue/toast';
     import { useToast } from 'primevue/usetoast';
-    import ProgressSpinner from 'primevue/progressspinner';
+    import Loading from 'vue-loading-overlay';
+
     export default {
         name:"LoginView",
         components:{
             Toast,
-            ProgressSpinner,
+            Loading,
         },
         setup(){
             let router = useRouter();
+
             const password = ref("");
             const username = ref("");
+
             const isLoading = ref(false);
             const toast = useToast();
+            //I made this to pass the user as a prop btw.
             const user = ref("");
+
             const { proxy } = getCurrentInstance();
+
             const LogInUser = async () => {
                 try{
                     isLoading.value = true;
                     const postRequest = await proxy.$api.post('/login',{username:username.value,password:password.value});
                     const { access_token, userName } = postRequest.data;
                     user.value = userName;
-                    console.log(user.value)
+                    //I stored the access_token and the username in local storage.
                     localStorage.setItem("access_token", access_token);
                     localStorage.setItem("username", userName);
+                    //Redirec to propped route.
                     router.push({name:'home',params:{user : user.value}});
-                }catch(error) {
+                }catch(error) { 
                     toast.add({
-                    severity: "error",
-                    summary: "Login Failed",
-                    detail: "Invalid username or password. Please try again.",
-                    life: 3000
-                });
-                isLoading.value = false;
-                console.error(error.message,"How far bro?");
+                        severity: "error",
+                        summary: "Login Failed",
+                        detail: "Invalid username or password. Please try again.",
+                        life: 3000
+                    });
+                    isLoading.value = false;
                 }
             }
             return {

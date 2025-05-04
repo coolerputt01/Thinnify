@@ -84,73 +84,85 @@
       Toast,
     },
     setup() {
+      //State to check if loading state has ended or started.
       const visible = ref(false);
       const category = ref('');
       const date = ref(null);
       const task = ref('');
+      //same here
       const isLoading = ref(false);
       const username = ref(localStorage.getItem('username'));
       const router = useRouter();
       const toast = useToast();
       const { proxy } = getCurrentInstance();
+
       const postTask = async () => {
           try {
               isLoading.value = true;
-              const response = await proxy.$api.post('/todo',{
-                title: task.value,
-                category: category.value.name,
-                endate: date.value,
-              },{
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`
-                }
-              });
-              toast.add({
-                    severity: "success",
-                    summary: "Todo Created",
-                    detail: "Todo has been created successfully.",
-                    life: 3000
+              if(task.value < 3) {
+                toast.add({severity: "error",
+                    summary: "Invalid Details",
+                    detail: "Enter a valid task_name",
+                    life: 3000});
+              } else {
+                  await proxy.$api.post('/todo',{
+                    title: task.value,
+                    category: category.value.name,
+                    endate: date.value,
+                },{
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+                    }
                 });
-              isLoading.value = false;
-              task.value = '';
-              category.value = '';
-              date.value = null;
-              console.log(category.value.name,"hi")
-              console.log('Task posted successfully:', response.data);
+                toast.add({
+                      severity: "success",
+                      summary: "Todo Created",
+                      detail: "Todo has been created successfully.",
+                      life: 3000
+                  });
+                isLoading.value = false;
+                task.value = '';
+                category.value = '';
+                date.value = null;
+            }
           }catch (error) {
               isLoading.value = false;
-              console.log(category.value,"hi")
-              console.error('Error posting task:', error.message);
+              toast.add(
+                    {severity: "error",
+                    summary: "Error Occured",
+                    detail: "Try again later",
+                    life: 3000}
+                );
           }
-      }
-      const goHome = () => {
-        const username = localStorage.getItem('username');
-        console.log(username);
-        router.push({ 
-          name: 'transition', 
-          params: { page : 'home',user: username } 
-        });
-    };
-      const categories = [
-        { name: 'Personal', icon: require('../assets/personal.svg'), color: 'rgba(140, 201, 255,0.3)' },
-        { name: 'Productivity', icon: require('../assets/productivity.svg'), color: 'rgba(248, 143, 255,0.3)' },
-        { name: 'Fitness', icon: require('../assets/fitness.svg'), color: 'rgba(156, 255, 143,0.3)' },
-        { name: 'Work', icon: require('../assets/work.svg'), color: 'rgba(190, 143, 255,0.3)' },
-        { name: 'Default', icon: require('../assets/default.svg'), color: 'rgba(204, 204, 204,0.3)' }
-    ]
+        }
+        const goHome = () => {
+          const username = localStorage.getItem('username');
+          console.log(username);
+          router.push({ 
+            name: 'transition', 
+            params: { page : 'home',user: username } 
+          });
+        };
+        const categories = [
+          { name: 'Personal', icon: require('../assets/personal.svg'), color: 'rgba(140, 201, 255,0.3)' },
+          { name: 'Productivity', icon: require('../assets/productivity.svg'), color: 'rgba(248, 143, 255,0.3)' },
+          { name: 'Fitness', icon: require('../assets/fitness.svg'), color: 'rgba(156, 255, 143,0.3)' },
+          { name: 'Work', icon: require('../assets/work.svg'), color: 'rgba(190, 143, 255,0.3)' },
+          { name: 'Default', icon: require('../assets/default.svg'), color: 'rgba(204, 204, 204,0.3)' }
+      ]
 
-  
-      return {
-        categories,
-        username,
-        goHome,
-        visible,
-        date,
-        postTask,
-        task,
-        category,
-        isLoading,
-      }
+    
+        return {
+          categories,
+          username,
+          goHome,
+          visible,
+          date,
+          postTask,
+          task,
+          category,
+          isLoading,
+        }
     }
   }
   </script>
@@ -201,6 +213,7 @@
     transition: border-color 0.3s ease;
     background-color: #ff5d2b;
     color: white;
+    cursor: pointer;
   }
   .date-input {
     display: flex;
@@ -326,6 +339,29 @@
   
   .select-placeholder {
     color: #aaa;
+  }
+  @media (min-width: 768px) {
+    .input-container {
+      width: 95vw;
+    }
+    .date-input {
+      width: 95vw;
+      margin: 1%;
+      cursor: pointer;
+    }
+    .date {
+      margin-top: 1.5%;
+    }
+    .button-container {
+      margin-top: 1%;
+      width: 52vw;
+    }
+    .button-container:hover {
+      cursor: pointer;
+    }
+    .form {
+      overflow: hidden;
+    }
   }
   </style>
   

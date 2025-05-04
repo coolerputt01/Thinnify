@@ -21,8 +21,8 @@
                 <span class="button-container">
                     <button class="form-submit" @click="signUpUser">
                         <p v-if="!isLoading">Sign Up</p>
-                        <ProgressSpinner v-else style="width: 32px; height: 32px" strokeWidth="8" fill="transparent" strokeColor="#fff"
-    animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+                        <loading :active="isLoading" width="32px" height="32px" color="#fff"
+                            animationDuration=".5s" loader="spinner" background-color="ff5d2bbb" />
                     </button>
                 </span>
             </div>
@@ -31,52 +31,59 @@
 </template>
 <!--I used Options API before then because i had to use the provide/inject API from Vue whivh are basically Compostion API tools I had to switch.-->
 <script>
+    //getCurrentInstance is a Vue utility that allows you to access te internal component instances... in  this case i used the proxyeith gives my the component 'this'.
     import { ref , getCurrentInstance} from 'vue';
     //I guess I never knew you could import Router component until now.Before I always used this.$router.push('/route').
     import { useRouter } from 'vue-router';
     import Toast from 'primevue/toast';
+    //A useToast state.
     import { useToast } from 'primevue/usetoast';
-    import ProgressSpinner from 'primevue/progressspinner';
+    //I had to use another Loading component that was more customizable.
+    import Loading from 'vue-loading-overlay';
     export default {
         name:"SignupView",
         components:{
             Toast,
-            ProgressSpinner,
+            Loading,
         },
         setup(){
             let router = useRouter();
+
             const password = ref("");
             const cpassword = ref("");
             const username = ref("");
+            //This handles the loading state of the authentication.
             const isLoading = ref(false);
             const toast = useToast();
+            // I destructured the proxy component instance from my getCurrentInstance utility.
             const { proxy } = getCurrentInstance();
+            //My signUp Auth function.
             const signUpUser = async () => {
                 try{
                     isLoading.value = true;
                     if(!(password.value.length > 6 && password.value ===cpassword.value)){
                         toast.add({
-                    severity: "error",
-                    summary: "Signup Failed",
-                    detail: "Please use more than 6 characters for password.",
-                    life: 3000
-                });
+                            severity: "error",
+                            summary: "Signup Failed",
+                            detail: "Please use more than 6 characters for password.",
+                            life: 3000
+                        });
                         isLoading.value = false;
-                        return
-                    }else{
-                    const postRequest = proxy.$api.post('register',{username:username.value,password:password.value});
-                    console.log(postRequest);
-                    router.push('/');
+                        return;
+                    } else{
+                        //Making use of that proxy that gives me 'this'.... to get my axios api instance..
+                        await proxy.$api.post('/register',{username:username.value,password:password.value});
+                        //Redirect.
+                        router.push('/');
                     }
                 }catch(error) {
                     toast.add({
-                    severity: "error",
-                    summary: "Login Failed",
-                    detail: "Invalid username or password. Please try again.",
-                    life: 3000
-                });
+                        severity: "error",
+                        summary: "Login Failed",
+                        detail: "Invalid username or password. Please try again.",
+                        life: 3000
+                    });
                     isLoading.value = false;
-                    console.error(error.message);
                 }
             }
             return {

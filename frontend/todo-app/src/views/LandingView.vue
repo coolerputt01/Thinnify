@@ -14,6 +14,9 @@
             <div class="button-container">
                 <button class="redirect-btn" @click="this.$router.push('/signup')">Let's Start <img src="../assets/right-arrow.svg" alt="Thinnify Thinnify Right Arrow" class="icon"></button>
             </div>
+            <div class="circles">
+
+            </div>
         </main>
     </section>
 </template>
@@ -44,10 +47,12 @@
         column-gap: 50px;
         flex-wrap: wrap;
         overflow: hidden;
+        position: relative;
     }
     .main-image-container {
         max-width: 85vw;
         max-height: 45vh;
+        position: relative;
     }
     .main-image {
         width: 100%;
@@ -107,5 +112,69 @@
     .redirect-btn:hover .icon {
         transform: translateX(15px);
         transition: all 250ms;
+    }
+    .main-image-container::before {
+        content: '';
+        position: absolute;
+        top: 15%;
+        left: 15%;
+        width: 16em;
+        height: 16em;
+        background-color: #ff5d2b;
+        opacity: 0.1;
+        border-radius: 50%;
+    }
+    @media (min-width: 768px) {
+        .main-image {
+            max-width: 50vw;
+            max-height: 50vh;
+        }
+        .circles {
+            position: absolute;
+            top: 1em;
+            left: 1em;
+            width: 14em;
+            height: 14em;
+            background-color: #ff5d2b;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+        .text-container {
+            margin-top: 5%;
+        }
+        .text-head {
+            font-size: 1.7em;
+            margin: 0.3em;
+        }
+        .redirect-btn {
+            width: 25vw !important;
+            padding: 8px;
+            height: 2em;
+        }
+        .redirect-btn:hover {
+            opacity: 1;
+        }
+        main::after {
+            content: '';
+            position: absolute;
+            top: 35%;
+            left: 16em;
+            width: 9em;
+            height: 9em;
+            opacity: 0.2;
+            background-color: #ff5d2b;
+            border-radius: 50%;
+        }
+        main::before {
+            content: '';
+            position: absolute;
+            top: 18%;
+            right: 8em;
+            width: 9em;
+            height: 9em;
+            opacity: 0.5;
+            background-color: #ff5d2b;
+            border-radius: 50%;
+        }
     }
 </style>

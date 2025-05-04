@@ -76,14 +76,14 @@
         justify-content: center;
         align-items: center;
         width: 100vw;
-        margin: 0.5% !important;
         padding: 6% !important;
     }
     .todo-card:hover {
-        transform: scale(1.05);
+        transform: scale(1.01);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
+        transition: all 0.5s ease;
         opacity: 0.9;
+        cursor: pointer;
     }
     .desc-info {
         display: flex;
@@ -118,5 +118,15 @@
         height: 30px;
         padding: 5px;
         border-radius: 50%;
+    }
+    @media (min-width: 768px) {
+        .todo-card-container {
+            width: 100%;
+            justify-content: left;
+        }
+        .todo-card {
+            width: 60vw;
+            border-radius: 50px;
+        }
     }
 </style>

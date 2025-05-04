@@ -52,7 +52,7 @@
             const fetchTodos = async () => {
                 try {
                     if(search.value && search.value.length > 3){
-                        const response = await proxy.$api.get('/search?q='+search.value, {
+                        const response = await proxy.$api.get('/todos/search?q='+search.value, {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem('access_token')}`
                             }
@@ -65,7 +65,7 @@
                 }
                 catch(error){
                     console.error("Failed to fetch todos:", error);
-                    toast.add({ severity: 'error', summary: 'Failed to Fetch', detail: 'Message Content', life: 3000 });
+                    toast.add({ severity: 'error', summary: 'Failed to Fetch', detail: 'Error Occured', life: 3000 });
                 }
             };
             let debounceTimer;
@@ -172,5 +172,15 @@
     }
     .search-input:focus {
         outline: none;
+    }
+    @media (min-width:768px) {
+        .search-icon {
+            right: 10em;
+            width: 1.2em;
+            height: 1.2em;
+        }
+        .card-container {
+            margin-top: 1%;
+        }
     }
 </style>
