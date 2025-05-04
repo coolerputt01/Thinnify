@@ -5,11 +5,12 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
 from datetime import datetime, timedelta
+import os
 
 app = Flask(__name__)
 
 # Configurations
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://flaskuser:flaskpassword@localhost:5432/flaskdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
@@ -19,7 +20,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:8080"}})
+CORS(app)
 
 # User Model
 class User(db.Model):
