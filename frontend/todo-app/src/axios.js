@@ -4,7 +4,7 @@ import axios from 'axios';
 import router from './router'; // Adjust the path if your router is elsewhere
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:5000/', // Replace with your Flask backend URL
+  baseURL: 'https://thinnify.onrender.com/', // Replace with your Flask backend URL
   headers: {
     'Content-Type': 'application/json',
   },
