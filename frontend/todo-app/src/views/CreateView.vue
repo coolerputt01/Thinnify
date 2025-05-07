@@ -70,7 +70,6 @@
   import Select from 'primevue/select';
   import Dialog from 'primevue/dialog';
   import Toast from 'primevue/toast';
-  import ProgressSpinner from 'primevue/progressspinner';
   import { useToast } from 'primevue/usetoast';
   import { useRouter } from 'vue-router';
   import Loading from 'vue-loading-overlay';
