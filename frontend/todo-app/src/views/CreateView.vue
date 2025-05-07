@@ -81,7 +81,7 @@
     components: {
       Select,
       Dialog,
-      ProgressSpinner,
+      Loading,
       Toast,
     },
     setup() {
