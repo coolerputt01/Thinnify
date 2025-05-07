@@ -18,7 +18,7 @@
                         <button class="view-btn">View Tasks</button>
                     </div>
                     <div class="c-prog">
-                        <CircleProgress :percent="(completedTasks.length/filteredTodos.length) * 100" :viewport="true" fill-color="#fff" empty-color="#ff9878" :show-percent="true" :border-width="strokewidth" :border-bg-width="strokewidth" :size="70" />
+                        <CircleProgress :percent="(completedTasks.length/filteredTodos.length) * 100" :viewport="true" fill-color="#fff" empty-color="#ff9878" :show-percent="true" :border-width="strokewidth" :border-bg-width="strokewidth" :size="circleSize" />
                     </div>
                 </div>
             </div>
@@ -178,12 +178,16 @@
             onBeforeUnmount(() => {
                 window.removeEventListener('resize', updateWindowWidth);
             });
+            const circleSize = computed(() => {
+    return Math.max(50, Math.min(200, windowWidth.value * 0.1));
+});
 
             return {
                 strokewidth,
                 width,
                 height,
                 windowWidth,
+                circleSize,
 
                 filteredTodos,
                 completedTasks,
