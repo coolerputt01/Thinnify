@@ -17,6 +17,7 @@
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.3.3",
+    "register-service-worker": "^1.7.2",
     "surge": "^0.24.6",
     "v-calendar": "^3.1.2",
     "v-lazy-image": "^2.1.1",
@@ -30,10 +31,13 @@
     "@babel/eslint-parser": "^7.12.16",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-pwa": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "naive-ui": "^2.41.0"
+    "naive-ui": "^2.41.0",
+    "prerender-spa-plugin": "^3.4.0",
+    "vite-plugin-pwa": "^1.0.0"
   },
   "eslintConfig": {
     "root": true,

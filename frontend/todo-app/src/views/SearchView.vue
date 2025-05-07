@@ -5,14 +5,14 @@
             <div class="search-container">
                 <div class="search-bar">
                     <input type="text" placeholder="Search..." class="search-input" v-model="search"/>
-                    <img src="../assets/search.svg" alt="Thinnify Thinnify nav icon search" class="search-icon" @click="fetchTodos"/>
+                    <VLazyImage src="../assets/search.svg" alt="Thinnify Thinnify nav icon search" class="search-icon" @click="fetchTodos" />
                 </div>
             </div>
             <div class="card-container" v-if="todos.length > 0">
                 <TodoComp v-for="todo in todos" :key="todo.id" :completed="todo.completed" :todo-id="todo.id" :todo-task="todo.title" :todo-date="new Date(todo.created).toLocaleDateString()" :todo-category="todo.category"  @status-updated="showToast" />
             </div>
             <div class="empty-todo" v-else>
-                <img src="../assets/animate.gif" alt="No Tasks" class="empty-todo-gif">
+                <VLazyImage src="../assets/animate.gif" alt="Thinnify Thinnify No Tasks" class="empty-todo-gif" />
                 <p class="none">No Tasks</p>
             </div>
             <NavBar />
@@ -25,12 +25,14 @@
     import TodoComp from '@/components/TodoComp.vue';
     import { Toast } from 'primevue';
     import { useToast } from 'primevue/usetoast';
+    import VLazyImage from "v-lazy-image";
     export default {
         name: 'SearchView',
         components:{
             NavBar,
             TodoComp,
-            Toast
+            Toast,
+            VLazyImage
         },
         props: {
             user: String

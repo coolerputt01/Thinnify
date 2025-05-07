@@ -20,7 +20,7 @@
                         <router-link :to="{ name:'transition',params:{ page:'search',user:'/'}}" ><img src="../assets/search.svg" alt="Thinnify Thinnify nav icon paper" class="icon"></router-link>
                     </div>
                     <div class="icon-container">
-                        <img src="../assets/people.svg" alt="Thinnify Thinnify nav icon people" class="icon">
+                        <router-link :to="{ name:'transition',params:{ page:'about',user:'/'} }"><img src="../assets/info.svg" alt="Thinnify Thinnify nav icon info" class="icon"></router-link>
                     </div>
                 </span>
             </span>

@@ -7,6 +7,7 @@ import ToastService from 'primevue/toastservice'
 import 'v-calendar/style.css'
 import VCalendar from 'v-calendar'
 import api from './axios.js'
+import './registerServiceWorker'
 
 const app = createApp(App)
 

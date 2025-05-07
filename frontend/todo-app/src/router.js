@@ -7,6 +7,7 @@ import LandingView from './views/LandingView.vue';
 import TransitionView from './views/TransitionView.vue';
 import CalenderView from './views/CalenderView.vue';
 import SearchView from './views/SearchView.vue';
+import AboutView from './views/AboutView.vue';
 
 
 const routes = [
@@ -18,6 +19,7 @@ const routes = [
   { path: '/transition/:page/:user',component: TransitionView ,name:"transition",props:true},
   { path: '/calender/:user',component: CalenderView ,name:"calender",props:true},
   { path: '/search/:user', component: SearchView,name:"search",props:true},
+  { path: '/about/:user',component: AboutView,name:"about",props:true},
 ];
 
 const router = createRouter({
