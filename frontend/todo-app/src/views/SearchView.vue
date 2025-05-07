@@ -12,7 +12,7 @@
                 <TodoComp v-for="todo in todos" :key="todo.id" :completed="todo.completed" :todo-id="todo.id" :todo-task="todo.title" :todo-date="new Date(todo.created).toLocaleDateString()" :todo-category="todo.category"  @status-updated="showToast" />
             </div>
             <div class="empty-todo" v-else>
-                <VLazyImage src="../assets/animate.gif" alt="Thinnify Thinnify No Tasks" class="empty-todo-gif" />
+                <VLazyImage :src="require('../assets/animate.gif')" alt="Thinnify Thinnify No Tasks" class="empty-todo-gif" />
                 <p class="none">No Tasks</p>
             </div>
             <NavBar />
