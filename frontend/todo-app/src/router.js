@@ -20,6 +20,10 @@ const routes = [
   { path: '/calender/:user',component: CalenderView ,name:"calender",props:true},
   { path: '/search/:user', component: SearchView,name:"search",props:true},
   { path: '/about/:user',component: AboutView,name:"about",props:true},
+  {
+  path: '/:pathMatch(.*)*',
+  redirect: '/login'
+  }
 ];
 
 const router = createRouter({
