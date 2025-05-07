@@ -57,8 +57,8 @@
             </Dialog>
           </div>
           <div class="button-container">
-            <button class="submit-button" @click="postTask()"><p v-if="!isLoading">Add Task</p> <ProgressSpinner v-else style="width: 32px; height: 32px" strokeWidth="8" fill="transparent" strokeColor="#fff"
-              animationDuration=".5s" aria-label="Custom ProgressSpinner" /></button>
+            <button class="submit-button" @click="postTask()"><p v-if="!isLoading">Add Task</p> <loading :active="isLoading" width="32px" height="32px" color="#fff"
+                            animationDuration=".5s" loader="spinner" background-color="ff5d2bbb" /></button>
           </div>
         </section>
       </main>
@@ -73,6 +73,7 @@
   import ProgressSpinner from 'primevue/progressspinner';
   import { useToast } from 'primevue/usetoast';
   import { useRouter } from 'vue-router';
+  import Loading from 'vue-loading-overlay';
   
   export default {
     name: 'CreateView',
