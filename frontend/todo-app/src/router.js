@@ -22,7 +22,7 @@ const routes = [
   { path: '/about/:user',component: AboutView,name:"about",props:true},
   {
   path: '/:pathMatch(.*)*',
-  redirect: '/login'
+  redirect: { name: 'login' }
   }
 ];
 
