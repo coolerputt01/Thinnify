@@ -20,7 +20,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
-CORS(app, origins=["https://thinnnify.onrender.com/"])
+CORS(app, origins=["https://thinnnify.onrender.com"])
 
 # User Model
 class User(db.Model):
