@@ -5,7 +5,7 @@
             <div class="search-container">
                 <div class="search-bar">
                     <input type="text" placeholder="Search..." class="search-input" v-model="search"/>
-                    <VLazyImage src="../assets/search.svg" alt="Thinnify Thinnify nav icon search" class="search-icon" @click="fetchTodos" />
+                    <VLazyImage :src="require('../assets/search.svg')" alt="Thinnify Thinnify nav icon search" class="search-icon" @click="fetchTodos" />
                 </div>
             </div>
             <div class="card-container" v-if="todos.length > 0">
