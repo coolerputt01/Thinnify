@@ -18,7 +18,7 @@
                         <button class="view-btn">View Tasks</button>
                     </div>
                     <div class="c-prog">
-                        <CircleProgress :percent="(completedTasks.length/filteredTodos.length) * 100" :viewport="true" fill-color="#fff" empty-color="#ff9878" :show-percent="true" :border-width="strokewidth" :border-bg-width="strokewidth" :size="circleSize" />
+                        <CircleProgress :percent="(completedTasks.length/filteredTodos.length) * 100" :viewport="true" fill-color="#fff" empty-color="#ff9878" :show-percent="true" :border-width="strokewidth" :border-bg-width="strokewidth" :size="70" />
                     </div>
                 </div>
             </div>
