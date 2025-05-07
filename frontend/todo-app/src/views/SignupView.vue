@@ -16,7 +16,7 @@
                 <span class="info-container">
                     <p>Already have an account?</p>
                     <!--This is how you use the router component in Vue 3. Btw I used this inplace of <a @click="this.$router.push('/')"> Login </a>-->
-                    <RouterLink to="/">Login</RouterLink>
+                    <RouterLink to="/login">Login</RouterLink>
                 </span>
                 <span class="button-container">
                     <button class="form-submit" @click="signUpUser">
@@ -74,7 +74,7 @@
                         //Making use of that proxy that gives me 'this'.... to get my axios api instance..
                         await proxy.$api.post('/register',{username:username.value,password:password.value});
                         //Redirect.
-                        router.push('/');
+                        router.push('/login');
                     }
                 }catch(error) {
                     toast.add({

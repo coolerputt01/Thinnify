@@ -12,12 +12,12 @@ module.exports = defineConfig({
       short_name: 'Thinnify',
       icons: [
         {
-          src: 'https://i.ibb.co/DDRmhmFj/Thnnify-Thinnify-Thinnify-Logo.png',
+          src: 'icon.png',
           sizes: '192x192',
           type: 'image/png',
         },
         {
-          src: 'https://i.ibb.co/DDRmhmFj/Thnnify-Thinnify-Thinnify-Logo.png',
+          src: 'icon.png',
           sizes: '512x512',
           type: 'image/png',
         },

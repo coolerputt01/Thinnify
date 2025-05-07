@@ -12,10 +12,10 @@ import AboutView from './views/AboutView.vue';
 
 const routes = [
   { path: '/home/:user', component: HomeView,name:"home",props:true },
-  { path: '/', component: LoginView ,name:"login" },
+  { path: '/login', component: LoginView ,name:"login" },
   { path: '/signup', component: SignupView },
   { path: '/create', component: CreateView ,name:"create",props:true},
-  { path: '/landing',component: LandingView },
+  { path: '/',component: LandingView },
   { path: '/transition/:page/:user',component: TransitionView ,name:"transition",props:true},
   { path: '/calender/:user',component: CalenderView ,name:"calender",props:true},
   { path: '/search/:user', component: SearchView,name:"search",props:true},
