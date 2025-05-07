@@ -10,6 +10,19 @@
 * {
   font-family: "Urbanist",sans-serif;
 }
+    :root {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light;
+  }
+
+  body, html, * {
+    background-color: white !important;
+  }
+}
 /* 🔹 Fix the Toast font issue */
 .p-toast {
     font-family: "Urbanist", sans-serif !important;
