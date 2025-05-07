@@ -18,10 +18,6 @@
   :root {
     color-scheme: light;
   }
-
-  body, html, * {
-    background-color: white !important;
-  }
 }
 /* 🔹 Fix the Toast font issue */
 .p-toast {
